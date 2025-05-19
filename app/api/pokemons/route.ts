@@ -11,9 +11,6 @@ export async function GET(req: NextRequest) {
 
     const data = await res.json();
 
-    // data.results - массив с покемонами с {name, url}
-    // Чтобы получить ID и изображение, нужно парсить URL или делать дополнительный запрос (для упрощения - спарсим id из URL)
-
     const pokemons = data.results.map((pokemon: { name: string; url: string }) => {
       const id = pokemon.url.split('/').filter(Boolean).pop();
       const image = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png`;

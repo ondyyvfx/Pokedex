@@ -50,7 +50,7 @@ export default function SavedPokemons() {
               <Image
                 src={pokemon.image}
                 alt={pokemon.name}
-                width={128} // примерно соответствует w-32 (32*4)
+                width={128}
                 height={128}
                 className="mx-auto mb-4"
               />

@@ -21,7 +21,6 @@ export default function Header() {
           Pokémon App
         </Link>
 
-        {/* Кнопка для мобилки */}
         <button
           className="md:hidden text-pink-500 focus:outline-none text-2xl"
           aria-label="Toggle menu"
@@ -30,7 +29,6 @@ export default function Header() {
           {isOpen ? "✕" : "☰"}
         </button>
 
-        {/* Меню */}
         <div
           className={`${
             isOpen ? "flex" : "hidden"

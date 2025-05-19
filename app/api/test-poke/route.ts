@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     
-    // Проверяем, что answers — массив строк
     if (!body.answers || !Array.isArray(body.answers) || !body.answers.every((a: unknown) => typeof a === "string")) {
       return NextResponse.json({ error: "Некорректные данные" }, { status: 400 });
     }
@@ -43,7 +42,6 @@ ${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
       return NextResponse.json({ error: "Пустой ответ от OpenAI" }, { status: 500 });
     }
 
-    // Парсим ответ GPT
     const json: GPTResponse = JSON.parse(raw);
 
     const pokeName = json.name.toLowerCase();

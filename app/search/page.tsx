@@ -111,7 +111,7 @@ export default function SearchPokemon() {
               <Image
                 src={result.image}
                 alt={result.name}
-                width={160} // ~w-40
+                width={160}
                 height={160}
                 className="mx-auto mb-4"
               />
