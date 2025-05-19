@@ -1,10 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Image from "next/image";
 import Header from "@/components/Header";
 import { SparklesCore } from "@/components/ui/sparkles";
+
+interface PokemonResult {
+  name: string;
+  id: number;
+  reason: string;
+}
 
 const questions = [
   {
@@ -35,8 +41,7 @@ export default function WhoPokemonPage() {
     Array(questions.length).fill("")
   );
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any | null>(null);
-  const router = useRouter();
+  const [result, setResult] = useState<PokemonResult | null>(null);
 
   const handleSelect = (index: number, option: string) => {
     const newAnswers = [...answers];
@@ -58,14 +63,14 @@ export default function WhoPokemonPage() {
         body: JSON.stringify({ answers }),
       });
 
-      const data = await res.json();
+      const data: PokemonResult = await res.json();
       if (data?.name) {
         setResult(data);
         toast.success(`Ты — ${data.name}!`);
       } else {
         toast.error("Ошибка при определении покемона");
       }
-    } catch (err) {
+    } catch {
       toast.error("Ошибка сервера 😢");
     } finally {
       setLoading(false);
@@ -131,11 +136,14 @@ export default function WhoPokemonPage() {
               <h2 className="text-2xl font-bold mb-4 text-green-400">
                 Ты — {result.name}!
               </h2>
-              <img
-                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${result.id}.png`}
-                alt={result.name}
-                className="w-66 mx-auto mb-4"
-              />
+              <div className="relative w-64 h-64 mx-auto mb-4">
+                <Image
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${result.id}.png`}
+                  alt={result.name}
+                  fill
+                  className="object-contain"
+                />
+              </div>
 
               <p className="text-gray-300">{result.reason}</p>
 

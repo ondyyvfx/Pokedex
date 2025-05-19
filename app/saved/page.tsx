@@ -1,11 +1,19 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import { toast } from "sonner";
 
+interface Pokemon {
+  id: number;
+  name: string;
+  image: string;
+  types: string[];
+}
+
 export default function SavedPokemons() {
-  const [savedPokemons, setSavedPokemons] = useState<any[]>([]);
+  const [savedPokemons, setSavedPokemons] = useState<Pokemon[]>([]);
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("savedPokemons") || "[]");
@@ -39,10 +47,12 @@ export default function SavedPokemons() {
               key={pokemon.id}
               className="bg-zinc-800 rounded-2xl p-6 text-center shadow-xl"
             >
-              <img
+              <Image
                 src={pokemon.image}
                 alt={pokemon.name}
-                className="w-32 mx-auto mb-4"
+                width={128} // примерно соответствует w-32 (32*4)
+                height={128}
+                className="mx-auto mb-4"
               />
               <h2 className="text-xl font-semibold capitalize">
                 {pokemon.name}

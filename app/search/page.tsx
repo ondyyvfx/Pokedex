@@ -1,14 +1,30 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { toast } from "sonner";
 
+interface PokemonStat {
+  name: string;
+  value: number;
+}
+
+interface PokemonSearchResult {
+  id: number;
+  name: string;
+  image: string;
+  types: string[];
+  height: number;
+  weight: number;
+  stats: PokemonStat[];
+}
+
 export default function SearchPokemon() {
   const [query, setQuery] = useState("");
-  const [result, setResult] = useState<any | null>(null);
+  const [result, setResult] = useState<PokemonSearchResult | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -34,11 +50,11 @@ export default function SearchPokemon() {
   const tamePokemon = () => {
     if (!result) return;
 
-    const savedPokemons = JSON.parse(
+    const savedPokemons: PokemonSearchResult[] = JSON.parse(
       localStorage.getItem("savedPokemons") || "[]"
     );
 
-    const alreadyExists = savedPokemons.some((p: any) => p.id === result.id);
+    const alreadyExists = savedPokemons.some((p) => p.id === result.id);
 
     if (!alreadyExists) {
       savedPokemons.push(result);
@@ -92,10 +108,12 @@ export default function SearchPokemon() {
 
           {result && (
             <div className="mt-6 p-6 bg-zinc-800/80 backdrop-blur rounded-2xl shadow-xl">
-              <img
+              <Image
                 src={result.image}
                 alt={result.name}
-                className="w-40 mx-auto mb-4"
+                width={160} // ~w-40
+                height={160}
+                className="mx-auto mb-4"
               />
               <h2 className="text-2xl font-bold capitalize">{result.name}</h2>
               <p className="text-sm text-gray-400 mb-2">
@@ -109,7 +127,7 @@ export default function SearchPokemon() {
               </p>
               <h3 className="mt-4 text-lg font-semibold">Статы:</h3>
               <ul className="text-sm text-gray-300">
-                {result.stats.map((stat: any) => (
+                {result.stats.map((stat) => (
                   <li key={stat.name}>
                     {stat.name}: <strong>{stat.value}</strong>
                   </li>

@@ -5,17 +5,25 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+interface GPTResponse {
+  name: string;
+  reason: string;
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const { answers } = await req.json();
-
-    if (!answers || !Array.isArray(answers)) {
+    const body = await req.json();
+    
+    // Проверяем, что answers — массив строк
+    if (!body.answers || !Array.isArray(body.answers) || !body.answers.every((a: unknown) => typeof a === "string")) {
       return NextResponse.json({ error: "Некорректные данные" }, { status: 400 });
     }
 
+    const answers: string[] = body.answers;
+
     const prompt = `
 Ты — эксперт по покемонам. Пользователь ответил на следующие вопросы:
-${answers.map((a: string, i: number) => `${i + 1}. ${a}`).join("\n")}
+${answers.map((a, i) => `${i + 1}. ${a}`).join("\n")}
 
 На основе этих ответов скажи, на какого покемона он больше всего похож. Ответ верни строго в JSON:
 {
@@ -36,12 +44,10 @@ ${answers.map((a: string, i: number) => `${i + 1}. ${a}`).join("\n")}
     }
 
     // Парсим ответ GPT
-    const json = JSON.parse(raw);
+    const json: GPTResponse = JSON.parse(raw);
 
-    // Получаем имя покемона в нижнем регистре для запроса к PokeAPI
     const pokeName = json.name.toLowerCase();
 
-    // Запрос к PokeAPI для получения ID и других данных
     const pokeRes = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeName}`);
 
     if (!pokeRes.ok) {
@@ -50,16 +56,15 @@ ${answers.map((a: string, i: number) => `${i + 1}. ${a}`).join("\n")}
 
     const pokeData = await pokeRes.json();
 
-    // Формируем объект с нужными данными: id, name, reason
     const response = {
-      id: pokeData.id,          // числовой ID
-      name: json.name,          // имя от GPT (с заглавной)
-      reason: json.reason,      // объяснение от GPT
+      id: pokeData.id,
+      name: json.name,
+      reason: json.reason,
     };
 
     return NextResponse.json(response);
 
-  } catch (error: any) {
+  } catch (error) {
     console.error("Ошибка в who-pokemon API:", error);
     return NextResponse.json({ error: "Что-то пошло не так." }, { status: 500 });
   }

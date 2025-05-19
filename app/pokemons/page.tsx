@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import { useRouter } from "next/navigation";
@@ -56,10 +57,12 @@ export default function PokemonsPage() {
               className="bg-zinc-900 rounded-xl p-4 flex flex-col items-center cursor-pointer hover:bg-pink-600 transition"
               onClick={() => router.push(`/pokemons/${pokemon.name}`)}
             >
-              <img
+              <Image
                 src={pokemon.image}
                 alt={pokemon.name}
-                className="w-24 h-24 mb-2"
+                width={96}
+                height={96}
+                className="mb-2"
               />
               <h2 className="capitalize font-semibold">{pokemon.name}</h2>
             </div>

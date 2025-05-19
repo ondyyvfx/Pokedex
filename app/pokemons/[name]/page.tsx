@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState, use } from "react";
 import { toast } from "sonner";
@@ -73,10 +74,12 @@ export default function PokemonDetail({ params }: Params) {
       </button>
 
       <div className="max-w-xl mx-auto bg-zinc-800 p-6 rounded-2xl shadow-xl">
-        <img
+        <Image
           src={data.sprites.front_default}
           alt={data.name}
-          className="w-40 mx-auto mb-4"
+          width={160}
+          height={160}
+          className="mx-auto mb-4"
         />
         <h1 className="text-3xl font-bold capitalize">{data.name}</h1>
         <p className="text-gray-400 mt-2">
