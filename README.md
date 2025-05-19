@@ -35,7 +35,8 @@
 
 1. **Клонируйте репозиторий**:
    ```bash
-   git clone https://github.com/your-username/pokemon-app.git
-   cd pokemon-app
+   git clone https://github.com/ondyyvfx/Pokedex
+   cd Pokedex
+   code .
    npm install
    npm run dev
